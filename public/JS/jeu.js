@@ -1207,6 +1207,8 @@ Promise.all([
 // Assurez-vous que toutes les images sont chargées avant de dessiner
 
 function startGame(arg) {
+    var music = document.getElementById("music")
+    music.play()
     const jeu = document.querySelector('.zone_jeu');
     const niveau = document.querySelector('.nom-niveau');
     const touche = document.querySelector('.touches');
