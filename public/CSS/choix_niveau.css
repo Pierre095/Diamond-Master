@@ -1,0 +1,87 @@
+html {
+    Font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+    overflow-x: hidden;
+}
+
+body {
+    background-color: rgb(240, 240, 240);
+    margin: 0;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.nom-jeu{
+    position : static;
+    margin-left : 10px;
+    margin-top : 10px;
+}
+
+.nom-jeu a{
+    text-decoration: none;
+    color : black;
+}
+
+
+.niveaux{
+    position : relative ;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+    top : 50px
+}
+
+.niveau-list {
+    display: flex;
+    flex-wrap:wrap;
+    gap : 9%;
+    justify-content: space-around;
+    
+
+}
+
+.niveau {
+    position :static;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(230, 230, 230);
+    box-shadow: 3px 3px 3px 3px rgb(186, 186, 186);
+    border-radius: 20px;
+    margin-bottom: 3%;
+    width: 300px;
+    height : 300px;
+    padding: 1%;
+    transition : all 0.25s ease;
+}
+
+.niveau:hover{
+    background-color: rgb(199, 199, 199);
+    box-shadow: 3px 3px 3px 3px rgb(122, 122, 122);
+}
+
+.niveau .titre {
+    display: flex;
+    justify-content: space-around;
+    gap: 50px;
+    text-align: center;
+    list-style: none;
+}
+
+.img-veille {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin: 5%;
+    border-radius: 20px;
+    width : 60%;
+}
+
+.date_note {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}

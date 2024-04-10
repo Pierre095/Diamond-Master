@@ -1,0 +1,141 @@
+html {
+  Font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+  overflow: hidden;
+}
+
+body {
+  background-color: rgb(240, 240, 240);
+  margin: 0;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.fond_ecran {
+  position: fixed;
+  z-index: -10;
+  width: 100%;
+  height: 100%;
+  filter: blur(10px);
+}
+
+.nom-jeu {
+  position: static;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.nom-jeu a {
+  text-decoration: none;
+  color: black;
+}
+
+.login-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+  background: #00151d;
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px #00151d;
+  border-radius: 10px;
+}
+
+.login-box .user-box {
+  position: relative;
+}
+
+.login-box .user-box input {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+}
+
+.login-box .user-box label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  pointer-events: none;
+  transition: .5s;
+}
+
+.login-box .user-box input:focus~label,
+.login-box .user-box input:valid~label {
+  top: -20px;
+  left: 0;
+  color: #bdb8b8;
+  font-size: 12px;
+}
+
+.login-box form button {
+  background: transparent;
+  border: none;
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px;
+  color: #ffffff;
+  font-size: 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition: .5s;
+  margin-top: 40px;
+  letter-spacing: 4px
+}
+
+.login-box button:hover {
+  cursor: pointer;
+  background: #003141;
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #000000,
+    0 0 25px #000000,
+    0 0 50px #000000,
+    0 0 100px #000000,
+}
+
+.login-box button span {
+  position: absolute;
+  display: block;
+}
+
+@keyframes btn-anim1 {
+  0% {
+    left: -100%;
+  }
+
+  50%,
+  100% {
+    left: 100%;
+  }
+}
+
+.login-box button span:nth-child(1) {
+  bottom: 2px;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffffff);
+  animation: btn-anim1 2s linear infinite;
+}
+
+.second_choix {
+  text-decoration: none;
+  color: white;
+}
+
+.second_choix:hover {
+  text-decoration: underline;
+}

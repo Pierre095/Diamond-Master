@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Master</title>
+    <link rel="icon" type="image/png" href="./IMG/ASSET/PJ1.png">
+    <script src="https://kit.fontawesome.com/acc6f5edeb.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./CSS/style.css">
+    <link rel="stylesheet" href="./CSS/compte.css">
+</head>
+<img class="fond_ecran" src="IMG/salle_blanche.png">
+
+<header>
+    <div class="nom-jeu">
+        <img class="logo" src="IMG/logo.png">
+    </div>
+
+    <h1 class="nom-niveau">Mon Compte<span id="niveaux"></span></h1>
+</header>
+
+<body>
+    <div class="bloc">
+        <div class="presentation_utilisateur">
+            <div class="text_presentation">
+                <h1 class="nom_utilisateur"><span id="nomUtilisateur"></span></h1>
+            </div>
+            <h1>Skin</h1>
+            <div class="choix_skin">
+                <a> < </a><img class="image_perso" src="./IMG/ASSET/PJ1.png"><a>></a>
+            </div>
+        </div>
+        <div class="presentation_temps">
+            <div class="text_presentation">
+                <h2>Temps total : <span id="tempsTotal"></span></h2>
+                <h2 style="text-decoration: underline;">Meilleur Temps :</h2>
+                <p><B>Niveau 1</B> : <span id="meilleurTemps1"></span></p>
+                <p><B>Niveau 2</B> : <span id="meilleurTemps2"></span></p>
+                <p><B>Niveau 3</B> : <span id="meilleurTemps3"></span></p>
+                <p><B>Niveau 4</B> : <span id="meilleurTemps4"></span></p>
+                <p><B>Niveau 5</B> : <span id="meilleurTemps5"></span></p>
+                <p><B>Niveau 6</B> : <span id="meilleurTemps6"></span></p>
+                <p><B>Niveau 7</B> : <span id="meilleurTemps7"></span></p>
+                <p><B>Niveau 8</B> : <span id="meilleurTemps8"></span></p>
+            </div>
+        </div>
+    </div>
+</body>
+<footer class="navbar">
+    <a class="bouton" id="niveaux" href="jeu.html"><i class="fa-solid fa-star"></i> Niveaux</a>
+    <a class="bouton" href="index.html"><i class="fa-solid fa-house"></i> Menu</a>
+    <a class="bouton" id="boutonDeconnexion" id="compte">Déconnexion <i class="fa-solid fa-right-from-bracket"></i></a>
+</footer>
+
+<script src="./JS/login.js"></script>
+<script src="./JS/compte.js"></script>

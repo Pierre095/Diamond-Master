@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Master</title>
+    <link rel="icon" type="image/png" href="./IMG/ASSET/PJ1.png">
+    <script src="https://kit.fontawesome.com/acc6f5edeb.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./CSS/style.css">
+</head>
+<img class="fond_ecran" src="IMG/salle_blanche.png">
+<audio id="music">
+    <source src="music/music_jeu.mp3" type="audio/mp3">
+</audio>
+<header>
+    <div class="nom-jeu">
+        <img class="logo" src="IMG/logo.png">
+    </div>
+</header>
+
+<body>
+    <div class="signin-login">
+        <a class="bouton" href="inscription.html"><i class="fa-solid fa-pen-to-square"></i> Inscription</a>
+        <a style="font-size: xx-large;"> / </a>
+        <a class="bouton" href="login.html"><i class="fa-solid fa-user"></i> Connexion</a>
+    </div>
+
+
+    <div class="zone_jeu">
+        <canvas></canvas>
+    </div>
+    <h1 class="nom-niveau">Niveau <span id="niveaux"></span></h1>
+
+    <div class="move-timer">
+        <div class="deplacements">
+            <h2>Déplacements restant</h2>
+            <div id="moveCount" class="moveCount">0</div>
+        </div>
+        <div class="temps">
+            <h2>Temps</h2>
+            <div id="timer" class="timer">00:00:00</div>
+        </div>
+    </div>
+
+    <div class="death_hide">DEAD</div>
+    <div class="win_hide">WIN</div>
+
+
+    <div class="niveaux">
+        <div class="niveau-list">
+            <div class="niveau" class="niveau_1" onclick="startGame('niveau1')">
+                <p class="titre">Niveau 1</p>
+                <img class="img-veille" src="./IMG/ASSET/map/niveau1.png">
+                <div class="date_note">
+                    <span class="note" data-note="3">
+                        difficulté :
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="niveau" class="niveau_1" href="./jeu.html" onclick="startGame('niveau2')">
+                <p class="titre">Niveau 2</p>
+                <img class="img-veille" src="./IMG/ASSET/map/niveau2.png">
+                <div class="date_note">
+                    <span class="note" data-note="3">
+                        difficulté :
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="niveau" class="niveau_1" onclick="startGame('niveau3')">
+                <p class="titre">Niveau 3</p>
+                <img class="img-veille" src="./IMG/ASSET/map/niveau3.png">
+                <div class="date_note">
+                    <span class="note" data-note="3">
+                        difficulté :
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="niveau" class="niveau_1" onclick="startGame('niveau4')">
+                <p class="titre">Niveau 4</p>
+                <img class="img-veille" src="./IMG/ASSET/map/niveau4.png">
+                <div class="date_note">
+                    <span class="note" data-note="3">
+                        difficulté :
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="niveau-list">
+            <div class="niveau" class="niveau_1" onclick="startGame('niveau5')">
+                <p class="titre">Niveau 5</p>
+                <img class="img-veille" src="./IMG/ASSET/map/niveau5.png">
+                <div class="date_note">
+                    <span class="note" data-note="3">
+                        difficulté :
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="niveau" class="niveau_1" onclick="startGame('niveau6')">
+                <p class="titre">Niveau 6</p>
+                <img class="img-veille" src="./IMG/ASSET/map/niveau6.png">
+                <div class="date_note">
+                    <span class="note" data-note="3">
+                        difficulté :
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="niveau" class="niveau_1" onclick="startGame('niveau7')">
+                <p class="titre">Niveau 7</p>
+                <img class="img-veille" src="./IMG/ASSET/map/niveau7.png">
+                <div class="date_note">
+                    <span class="note" data-note="3">
+                        difficulté :
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-regular fa-star fa-xs"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="niveau" class="niveau_1" onclick="startGame('niveau8')">
+                <p class="titre">Niveau 8</p>
+                <img class="img-veille" src="./IMG/ASSET/map/niveau8.png">
+                <div class="date_note">
+                    <span class="note" data-note="3">
+                        difficulté :
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                        <i class="fa-solid fa-star fa-xs"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<footer class="navbar">
+    <div class="touches">
+            <h2>Touches :</h2>
+        <div class="lettre-direction">
+            <ul class="direction">
+                <li>Z</li>
+                <li>Q</li>
+                <li>S</li>
+                <li>D</li>
+                <li>R</li>
+
+            </ul>
+            <ul class="direction">
+                <li><i class="fa-solid fa-arrow-up"></i></li>
+                <li><i class="fa-solid fa-arrow-left"></i></li>
+                <li><i class="fa-solid fa-arrow-down"></i></li>
+                <li><i class="fa-solid fa-arrow-right"></i></li>
+            </ul>
+        </div>
+    </div>
+
+    <a class="bouton" href="index.html"><i class="fa-solid fa-house"></i> Menu</a>
+    <a class="bouton" id="compte" href="compte.html"><i class="fa-solid fa-user"></i> Compte</a>
+</footer>
+
+<script src="./JS/jeu.js"></script>
+<script src="./JS/login.js"></script>
+<script>
+    var music = document.getElementById("music")
+    music.play()
+</script>
