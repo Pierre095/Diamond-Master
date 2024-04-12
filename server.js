@@ -34,7 +34,7 @@ connection.connect(err => {
   console.log('Connecter à MySQL');
 });
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/inscription', async (req, res) => {
   const { username, password, confirm_password } = req.body;
