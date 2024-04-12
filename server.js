@@ -92,7 +92,6 @@ app.post('/connexion', (req, res) => {
   });
 });
 
-
 app.get('/api/get-username', (req, res) => {
   if (!req.session.userId) {
     return res.status(401).send({ error: 'Utilisateur non connecté' });
