@@ -3,6 +3,8 @@ const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const app = express();
+const path = require('path');
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
