@@ -16,10 +16,10 @@ app.use(session({
 }));
 
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'admin',
-  database: 'diamond_master'
+  host: 'mysql-bouffies.alwaysdata.net',
+  user: 'bouffies',
+  password: 'Handball*95640',
+  database: 'bouffies_diamond_master'
 });
 
 connection.connect(err => {
@@ -41,7 +41,7 @@ app.post('/inscription', async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    
+
     const query = 'INSERT INTO Player (Username, Password) VALUES (?, ?)';
     connection.query(query, [username, hashedPassword], (err, results) => {
       if (err) {
@@ -92,21 +92,21 @@ app.post('/connexion', (req, res) => {
 
 
 app.get('/api/get-username', (req, res) => {
-    if (!req.session.userId) {
-        return res.status(401).send({ error: 'Utilisateur non connecté' });
+  if (!req.session.userId) {
+    return res.status(401).send({ error: 'Utilisateur non connecté' });
+  }
+  const query = 'SELECT Username FROM Player WHERE PlayerID = ?';
+  connection.query(query, [req.session.userId], (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération du username:', err);
+      return res.status(500).send({ error: 'Erreur serveur' });
     }
-    const query = 'SELECT Username FROM Player WHERE PlayerID = ?';
-    connection.query(query, [req.session.userId], (err, results) => {
-        if (err) {
-            console.error('Erreur lors de la récupération du username:', err);
-            return res.status(500).send({ error: 'Erreur serveur' });
-        }
-        if (results.length > 0) {
-            return res.json({ username: results[0].Username });
-        } else {
-            return res.status(404).send({ error: 'Utilisateur non trouvé' });
-        }
-    });
+    if (results.length > 0) {
+      return res.json({ username: results[0].Username });
+    } else {
+      return res.status(404).send({ error: 'Utilisateur non trouvé' });
+    }
+  });
 });
 
 app.post('/api/enregistrer-temps', (req, res) => {
@@ -185,6 +185,35 @@ app.get('/api/temps-total', (req, res) => {
     }
   });
 });
+
+app.get('/api/niveaux-debloques', (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).send('Utilisateur non connecté');
+  }
+
+  const query = `
+  SELECT n.NiveauID, n.Nom,
+        CASE 
+            WHEN n.DebloqueApresNiveauID IS NULL THEN TRUE
+            WHEN n.DebloqueApresNiveauID IN (
+                SELECT NiveauID FROM Score WHERE PlayerID = ? AND MeilleurTemps < 99999999.99
+            ) THEN TRUE
+            ELSE FALSE
+        END as Debloque
+  FROM Niveau n
+  ORDER BY n.NiveauID ASC;
+  `;
+  connection.query(query, [req.session.userId], (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération des niveaux débloqués:', err);
+      return res.status(500).send('Erreur serveur');
+    }
+    res.json(results);
+  });
+});
+
+
+
 
 
 

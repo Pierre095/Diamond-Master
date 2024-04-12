@@ -28,6 +28,25 @@ let timer_niveau6 = 0;
 let timer_niveau7 = 0;
 let timer_niveau8 = 0;
 
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/niveaux-debloques')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(niveau => {
+                const niveauElement = document.querySelector(`#niveau${niveau.NiveauID}`);
+                if (niveau.Debloque) {
+                    niveauElement.classList.remove('niveau_block');
+                    niveauElement.classList.add('niveau');
+                    niveauElement.addEventListener('click', () => startGame(`niveau${niveau.NiveauID}`));
+                } else {
+                    niveauElement.classList.add('niveau_block');
+                    niveauElement.removeEventListener('click', () => startGame(`niveau${niveau.NiveauID}`));
+                }
+            });
+        });
+});
+
+
 
 function PremiereConnexion() {
     return localStorage.getItem('FirstSignUp') === 'true';
