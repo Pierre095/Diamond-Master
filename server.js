@@ -30,7 +30,7 @@ app.use(session({
 
 // Pool de connexions MySQL
 const pool = mysql.createPool({
-  connectionLimit: 100,
+  connectionLimit: 1,
   host: options.host,
   user: options.user,
   password: options.password,
