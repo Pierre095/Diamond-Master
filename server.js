@@ -29,7 +29,7 @@ connection.connect(err => {
     console.error('Erreur de connexion à la base de données:', err);
     return;
   }
-  console.log('Connecté à MySQL');
+  console.log('Connecter à MySQL');
 });
 
 app.use(express.static('public'));
