@@ -5,6 +5,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.19.2",
+    "express-mysql-session": "^3.0.0",
     "express-session": "^1.18.0",
     "mysql": "^2.18.1",
     "nodejs": "^0.0.0",
