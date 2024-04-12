@@ -41,7 +41,7 @@ const pool = mysql.createPool({
   database        : 'bouffies_diamond_master'
 });
 
-connection.connect(err => {
+pool.connect(err => {
   if (err) {
     console.error('Erreur de connexion à la base de données:', err);
     return;

@@ -9,6 +9,7 @@
     "express-session": "^1.18.0",
     "mysql": "^2.18.1",
     "nodejs": "^0.0.0",
+    "serverless-mysql": "^1.5.5",
     "vercel": "^34.0.0"
   },
   "devDependencies": {
