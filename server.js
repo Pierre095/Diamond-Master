@@ -29,7 +29,7 @@ app.use(session({
 
 // Connection pool setup
 const pool = mysql.createPool({
-  connectionLimit: 1, // La limite de connexions pour tester
+  connectionLimit: 50, // La limite de connexions pour tester
   ...dbOptions
 });
 
