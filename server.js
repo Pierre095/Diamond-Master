@@ -19,11 +19,12 @@ app.use(session({
   cookie: { secure: false } // `true` en production avec HTTPS
 }));
 
-const connection = mysql.createConnection({
-  host: 'mysql-bouffies.alwaysdata.net',
-  user: 'bouffies',
-  password: 'Handball*95640',
-  database: 'bouffies_diamond_master'
+const pool = mysql.createPool({
+  connectionLimit : 10, // Nombre de connexions à créer dans le pool
+  host            : 'mysql-bouffies.alwaysdata.net',
+  user            : 'bouffies',
+  password        : 'Handball*95640',
+  database        : 'bouffies_diamond_master'
 });
 
 connection.connect(err => {
@@ -47,7 +48,7 @@ app.post('/inscription', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const query = 'INSERT INTO Player (Username, Password) VALUES (?, ?)';
-    connection.query(query, [username, hashedPassword], (err, results) => {
+    pool.query(query, [username, hashedPassword], (err, results) => {
       if (err) {
         console.error('Erreur lors de l\'insertion:', err);
         if (err.code === 'ER_DUP_ENTRY') {
