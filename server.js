@@ -2,39 +2,35 @@ const express = require('express');
 const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const app = express();
 const path = require('path');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuration de express-session avec MySQLStore
-const MySQLStore = require('express-mysql-session')(session);
-const options = {
+// Configurations
+const dbOptions = {
   host: 'mysql-bouffies.alwaysdata.net',
   user: 'bouffies',
-  password: 'Handball*95640', // Assurez-vous d'utiliser la bonne information de mot de passe
+  password: 'Handball*95640', // Remplacez par votre mot de passe réel
   database: 'bouffies_diamond_master'
 };
 
-// Créez une nouvelle instance de MySQLStore
-const sessionStore = new MySQLStore(options);
-
+// Session store setup
+const sessionStore = new MySQLStore(dbOptions);
 app.use(session({
   secret: 'secret très secret',
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Doit être `true` en production si vous utilisez HTTPS
+  cookie: { secure: false } // Doit être `true` si en production avec HTTPS
 }));
 
-// Pool de connexions MySQL
+// Connection pool setup
 const pool = mysql.createPool({
-  connectionLimit: 1,
-  host: options.host,
-  user: options.user,
-  password: options.password,
-  database: options.database
+  connectionLimit: 1, // La limite de connexions pour tester
+  ...dbOptions
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -101,17 +97,28 @@ app.get('/api/get-username', (req, res) => {
   if (!req.session.userId) {
     return res.status(401).send({ error: 'Utilisateur non connecté' });
   }
-  const query = 'SELECT Username FROM Player WHERE PlayerID = ?';
-  pool.query(query, [req.session.userId], (err, results) => {
+
+  pool.getConnection((err, connection) => {
     if (err) {
-      console.error('Erreur lors de la récupération du username:', err);
+      console.error('Erreur de connexion à la DB:', err);
       return res.status(500).send({ error: 'Erreur serveur' });
     }
-    if (results.length > 0) {
-      return res.json({ username: results[0].Username });
-    } else {
-      return res.status(404).send({ error: 'Utilisateur non trouvé' });
-    }
+
+    const query = 'SELECT Username FROM Player WHERE PlayerID = ?';
+    connection.query(query, [req.session.userId], (err, results) => {
+      // La connexion est retournée au pool ici
+      connection.release();
+
+      if (err) {
+        console.error('Erreur lors de la récupération du username:', err);
+        return res.status(500).send({ error: 'Erreur serveur' });
+      }
+      if (results.length > 0) {
+        return res.json({ username: results[0].Username });
+      } else {
+        return res.status(404).send({ error: 'Utilisateur non trouvé' });
+      }
+    });
   });
 });
 
@@ -222,7 +229,7 @@ app.get('/api/niveaux-debloques', (req, res) => {
 
 
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
