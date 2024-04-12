@@ -2,7 +2,6 @@ const express = require('express');
 const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
 const app = express();
 const path = require('path');
 
@@ -12,7 +11,13 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-
+// Configuration de express-session
+app.use(session({
+  secret: 'secret très secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // `true` en production avec HTTPS
+}));
 
 const connection = mysql.createConnection({
   host: 'mysql-bouffies.alwaysdata.net',
@@ -20,16 +25,6 @@ const connection = mysql.createConnection({
   password: 'Handball*95640',
   database: 'bouffies_diamond_master'
 });
-
-const sessionStore = new MySQLStore(options);
-
-app.use(session({
-  secret: 'secret très secret',
-  store: sessionStore,
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false } // Doit être `true` en production si vous utilisez HTTPS
-}));
 
 connection.connect(err => {
   if (err) {
