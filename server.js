@@ -12,7 +12,6 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // Configuration de express-session
-const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 
 const options = {
