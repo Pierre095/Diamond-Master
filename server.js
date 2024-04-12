@@ -85,7 +85,7 @@ app.post('/inscription', async (req, res) => {
 app.post('/connexion', (req, res) => {
   const { username, password } = req.body;
   const query = 'SELECT PlayerID, Password FROM Player WHERE Username = ?';
-  connection.query(query, [username], (err, results) => {
+  pool.query(query, [username], (err, results) => {
     if (err) {
       console.error('Erreur lors de la recherche de l\'utilisateur:', err);
       return res.status(500).json({ message: 'Erreur serveur.' });
@@ -114,7 +114,7 @@ app.get('/api/get-username', (req, res) => {
     return res.status(401).send({ error: 'Utilisateur non connecté' });
   }
   const query = 'SELECT Username FROM Player WHERE PlayerID = ?';
-  connection.query(query, [req.session.userId], (err, results) => {
+  pool.query(query, [req.session.userId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du username:', err);
       return res.status(500).send({ error: 'Erreur serveur' });
@@ -140,7 +140,7 @@ app.post('/api/enregistrer-temps', (req, res) => {
     VALUES (?, ?, ?, ?)
   `;
 
-  connection.query(query, [req.session.userId, niveauId, temps, total], (err) => {
+  pool.query(query, [req.session.userId, niveauId, temps, total], (err) => {
     if (err) {
       console.error('Erreur lors de l\'enregistrement du temps:', err);
       return res.status(500).send({ message: 'Erreur lors de l\'enregistrement du temps.' });
@@ -163,7 +163,7 @@ app.get('/api/dernier-temps', (req, res) => {
     LIMIT 1;
   `;
 
-  connection.query(query, [req.session.userId, niveauId], (err, results) => {
+  pool.query(query, [req.session.userId, niveauId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du dernier temps:', err);
       return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
@@ -191,7 +191,7 @@ app.get('/api/temps-total', (req, res) => {
     WHERE PlayerID = ?;
   `;
 
-  connection.query(query, [req.session.userId], (err, results) => {
+  pool.query(query, [req.session.userId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du temps total:', err);
       return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
@@ -221,7 +221,7 @@ app.get('/api/niveaux-debloques', (req, res) => {
   FROM Niveau n
   ORDER BY n.NiveauID ASC;
   `;
-  connection.query(query, [req.session.userId], (err, results) => {
+  pool.query(query, [req.session.userId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des niveaux débloqués:', err);
       return res.status(500).send('Erreur serveur');
