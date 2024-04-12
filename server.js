@@ -5,19 +5,15 @@ const session = require('express-session');
 const app = express();
 const path = require('path');
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-
-// Configuration de express-session
+// Configuration de express-session avec MySQLStore
 const MySQLStore = require('express-mysql-session')(session);
-
 const options = {
   host: 'mysql-bouffies.alwaysdata.net',
   user: 'bouffies',
-  password: 'votre_mot_de_passe', // Remplacez par votre vrai mot de passe
+  password: 'Handball*95640', // Assurez-vous d'utiliser la bonne information de mot de passe
   database: 'bouffies_diamond_master'
 };
 
@@ -32,21 +28,13 @@ app.use(session({
   cookie: { secure: false } // Doit être `true` en production si vous utilisez HTTPS
 }));
 
-
+// Pool de connexions MySQL
 const pool = mysql.createPool({
-  connectionLimit : 10, // Nombre de connexions à créer dans le pool
-  host            : 'mysql-bouffies.alwaysdata.net',
-  user            : 'bouffies',
-  password        : 'Handball*95640',
-  database        : 'bouffies_diamond_master'
-});
-
-pool.connect(err => {
-  if (err) {
-    console.error('Erreur de connexion à la base de données:', err);
-    return;
-  }
-  console.log('Connecter à MySQL');
+  connectionLimit: 10,
+  host: options.host,
+  user: options.user,
+  password: options.password,
+  database: options.database
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
