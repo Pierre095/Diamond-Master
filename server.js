@@ -19,14 +19,16 @@ app.use(session({
   cookie: { secure: false } // `true` en production avec HTTPS
 }));
 
-const connection = mysql.createConnection({
-  host: 'mysql-bouffies.alwaysdata.net',
-  user: 'bouffies',
-  password: 'Handball*95640',
-  database: 'bouffies_diamond_master'
+const pool = mysql.createPool({
+  connectionLimit : 10, // La limite de connexions à créer
+  host            : 'mysql-bouffies.alwaysdata.net',
+  user            : 'bouffies',
+  password        : 'Handball*95640',
+  database        : 'bouffies_diamond_master'
 });
 
-connection.connect(err => {
+
+pool.connect(err => {
   if (err) {
     console.error('Erreur de connexion à la base de données:', err);
     return;
@@ -47,7 +49,7 @@ app.post('/inscription', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const query = 'INSERT INTO Player (Username, Password) VALUES (?, ?)';
-    connection.query(query, [username, hashedPassword], (err, results) => {
+    pool.query(query, [username, hashedPassword], (err, results) => {
       if (err) {
         console.error('Erreur lors de l\'insertion:', err);
         if (err.code === 'ER_DUP_ENTRY') {
@@ -70,7 +72,7 @@ app.post('/inscription', async (req, res) => {
 app.post('/connexion', (req, res) => {
   const { username, password } = req.body;
   const query = 'SELECT PlayerID, Password FROM Player WHERE Username = ?';
-  connection.query(query, [username], (err, results) => {
+  pool.query(query, [username], (err, results) => {
     if (err) {
       console.error('Erreur lors de la recherche de l\'utilisateur:', err);
       return res.status(500).json({ message: 'Erreur serveur.' });
@@ -99,7 +101,7 @@ app.get('/api/get-username', (req, res) => {
     return res.status(401).send({ error: 'Utilisateur non connecté' });
   }
   const query = 'SELECT Username FROM Player WHERE PlayerID = ?';
-  connection.query(query, [req.session.userId], (err, results) => {
+  pool.query(query, [req.session.userId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du username:', err);
       return res.status(500).send({ error: 'Erreur serveur' });
@@ -125,7 +127,7 @@ app.post('/api/enregistrer-temps', (req, res) => {
     VALUES (?, ?, ?, ?)
   `;
 
-  connection.query(query, [req.session.userId, niveauId, temps, total], (err) => {
+  pool.query(query, [req.session.userId, niveauId, temps, total], (err) => {
     if (err) {
       console.error('Erreur lors de l\'enregistrement du temps:', err);
       return res.status(500).send({ message: 'Erreur lors de l\'enregistrement du temps.' });
@@ -148,7 +150,7 @@ app.get('/api/dernier-temps', (req, res) => {
     LIMIT 1;
   `;
 
-  connection.query(query, [req.session.userId, niveauId], (err, results) => {
+  pool.query(query, [req.session.userId, niveauId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du dernier temps:', err);
       return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
@@ -176,7 +178,7 @@ app.get('/api/temps-total', (req, res) => {
     WHERE PlayerID = ?;
   `;
 
-  connection.query(query, [req.session.userId], (err, results) => {
+  pool.query(query, [req.session.userId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du temps total:', err);
       return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
@@ -206,7 +208,7 @@ app.get('/api/niveaux-debloques', (req, res) => {
   FROM Niveau n
   ORDER BY n.NiveauID ASC;
   `;
-  connection.query(query, [req.session.userId], (err, results) => {
+  pool.query(query, [req.session.userId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des niveaux débloqués:', err);
       return res.status(500).send('Erreur serveur');
