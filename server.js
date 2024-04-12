@@ -12,12 +12,27 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // Configuration de express-session
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+
+const options = {
+  host: 'mysql-bouffies.alwaysdata.net',
+  user: 'bouffies',
+  password: 'votre_mot_de_passe', // Remplacez par votre vrai mot de passe
+  database: 'bouffies_diamond_master'
+};
+
+// Créez une nouvelle instance de MySQLStore
+const sessionStore = new MySQLStore(options);
+
 app.use(session({
   secret: 'secret très secret',
+  store: sessionStore,
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // `true` en production avec HTTPS
+  saveUninitialized: false,
+  cookie: { secure: false } // Doit être `true` en production si vous utilisez HTTPS
 }));
+
 
 const pool = mysql.createPool({
   connectionLimit : 10, // Nombre de connexions à créer dans le pool
