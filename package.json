@@ -3,6 +3,10 @@
     "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "vercel": "^34.0.0"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.0.26"
   }
 }
