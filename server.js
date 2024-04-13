@@ -11,14 +11,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Configurations
 const dbOptions = {
-  // host: 'mysql-bouffies.alwaysdata.net',
-  // user: 'bouffies',
-  // password: 'Handball*95640', // Remplacez par votre mot de passe réel
-  // database: 'bouffies_diamond_master'
-    host: 'localhost',
-    user: 'root',
-    password: 'admin', // Remplacez par votre mot de passe réel
-    database: 'diamond_master'
+  host: 'mysql-bouffies.alwaysdata.net',
+  user: 'bouffies',
+  password: 'Handball*95640', // Remplacez par votre mot de passe réel
+  database: 'bouffies_diamond_master'
 };
 
 // Session store setup
