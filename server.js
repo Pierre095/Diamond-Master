@@ -27,11 +27,30 @@ app.use(session({
   cookie: { secure: false } // Doit être `true` si en production avec HTTPS
 }));
 
-// Connection pool setup
-const pool = mysql.createPool({
-  connectionLimit: 50, // La limite de connexions pour tester
-  ...dbOptions
-});
+// Établir une connexion unique globale
+let globalConnection;
+function handleDisconnect() {
+  globalConnection = mysql.createConnection(dbOptions); 
+
+  globalConnection.connect(err => {
+    if (err) {
+      console.error('Erreur lors de la connexion à la DB:', err);
+      setTimeout(handleDisconnect, 2000); // Attendre avant de reconnecter
+    }
+    console.log('Connecté à la base de données.');
+  });
+
+  globalConnection.on('error', err => {
+    console.error('Erreur de DB:', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect(); // Reconnaître en cas de perte de connexion
+    } else {
+      throw err;
+    }
+  });
+}
+
+handleDisconnect();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -46,7 +65,7 @@ app.post('/inscription', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const query = 'INSERT INTO Player (Username, Password) VALUES (?, ?)';
-    pool.query(query, [username, hashedPassword], (err, results) => {
+    globalConnection.query(query, [username, hashedPassword], (err, results) => {
       if (err) {
         console.error('Erreur lors de l\'insertion:', err);
         if (err.code === 'ER_DUP_ENTRY') {
@@ -69,7 +88,7 @@ app.post('/inscription', async (req, res) => {
 app.post('/connexion', (req, res) => {
   const { username, password } = req.body;
   const query = 'SELECT PlayerID, Password FROM Player WHERE Username = ?';
-  pool.query(query, [username], (err, results) => {
+  globalConnection.query(query, [username], (err, results) => {
     if (err) {
       console.error('Erreur lors de la recherche de l\'utilisateur:', err);
       return res.status(500).json({ message: 'Erreur serveur.' });
@@ -93,32 +112,23 @@ app.post('/connexion', (req, res) => {
   });
 });
 
+// Utilisation de la connexion globale pour vos requêtes
 app.get('/api/get-username', (req, res) => {
   if (!req.session.userId) {
     return res.status(401).send({ error: 'Utilisateur non connecté' });
   }
 
-  pool.getConnection((err, connection) => {
+  const query = 'SELECT Username FROM Player WHERE PlayerID = ?';
+  globalConnection.query(query, [req.session.userId], (err, results) => {
     if (err) {
-      console.error('Erreur de connexion à la DB:', err);
+      console.error('Erreur lors de la récupération du username:', err);
       return res.status(500).send({ error: 'Erreur serveur' });
     }
-
-    const query = 'SELECT Username FROM Player WHERE PlayerID = ?';
-    connection.query(query, [req.session.userId], (err, results) => {
-      // La connexion est retournée au pool ici
-      connection.release();
-
-      if (err) {
-        console.error('Erreur lors de la récupération du username:', err);
-        return res.status(500).send({ error: 'Erreur serveur' });
-      }
-      if (results.length > 0) {
-        return res.json({ username: results[0].Username });
-      } else {
-        return res.status(404).send({ error: 'Utilisateur non trouvé' });
-      }
-    });
+    if (results.length > 0) {
+      return res.json({ username: results[0].Username });
+    } else {
+      return res.status(404).send({ error: 'Utilisateur non trouvé' });
+    }
   });
 });
 
@@ -135,7 +145,7 @@ app.post('/api/enregistrer-temps', (req, res) => {
     VALUES (?, ?, ?, ?)
   `;
 
-  pool.query(query, [req.session.userId, niveauId, temps, total], (err) => {
+  globalConnection.query(query, [req.session.userId, niveauId, temps, total], (err) => {
     if (err) {
       console.error('Erreur lors de l\'enregistrement du temps:', err);
       return res.status(500).send({ message: 'Erreur lors de l\'enregistrement du temps.' });
@@ -158,7 +168,7 @@ app.get('/api/dernier-temps', (req, res) => {
     LIMIT 1;
   `;
 
-  pool.query(query, [req.session.userId, niveauId], (err, results) => {
+  globalConnection.query(query, [req.session.userId, niveauId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du dernier temps:', err);
       return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
@@ -186,7 +196,7 @@ app.get('/api/temps-total', (req, res) => {
     WHERE PlayerID = ?;
   `;
 
-  pool.query(query, [req.session.userId], (err, results) => {
+  globalConnection.query(query, [req.session.userId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du temps total:', err);
       return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
@@ -216,7 +226,7 @@ app.get('/api/niveaux-debloques', (req, res) => {
   FROM Niveau n
   ORDER BY n.NiveauID ASC;
   `;
-  pool.query(query, [req.session.userId], (err, results) => {
+  globalConnection.query(query, [req.session.userId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des niveaux débloqués:', err);
       return res.status(500).send('Erreur serveur');
