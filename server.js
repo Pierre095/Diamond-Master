@@ -132,108 +132,108 @@ app.get('/api/get-username', (req, res) => {
   });
 });
 
-app.post('/api/enregistrer-temps', (req, res) => {
-  console.log(`Réception du serveur - Niveau ID: ${req.body.niveauId}, MeilleurTemps: ${req.body.temps}, TempsTotal: ${req.body.total}`); // Ajoute cette ligne
-  if (!req.session.userId) {
-    return res.status(401).send({ message: 'Veuillez vous connecter pour enregistrer votre temps.' });
-  }
+// app.post('/api/enregistrer-temps', (req, res) => {
+//   console.log(`Réception du serveur - Niveau ID: ${req.body.niveauId}, MeilleurTemps: ${req.body.temps}, TempsTotal: ${req.body.total}`); // Ajoute cette ligne
+//   if (!req.session.userId) {
+//     return res.status(401).send({ message: 'Veuillez vous connecter pour enregistrer votre temps.' });
+//   }
 
-  const { niveauId, temps, total } = req.body;
+//   const { niveauId, temps, total } = req.body;
 
-  const query = `
-    INSERT INTO Score (PlayerID, NiveauID, MeilleurTemps, TempsTotal)
-    VALUES (?, ?, ?, ?)
-  `;
+//   const query = `
+//     INSERT INTO Score (PlayerID, NiveauID, MeilleurTemps, TempsTotal)
+//     VALUES (?, ?, ?, ?)
+//   `;
 
-  globalConnection.query(query, [req.session.userId, niveauId, temps, total], (err) => {
-    if (err) {
-      console.error('Erreur lors de l\'enregistrement du temps:', err);
-      return res.status(500).send({ message: 'Erreur lors de l\'enregistrement du temps.' });
-    }
-    res.send({ message: 'Temps enregistré avec succès.' });
-  });
-});
+//   globalConnection.query(query, [req.session.userId, niveauId, temps, total], (err) => {
+//     if (err) {
+//       console.error('Erreur lors de l\'enregistrement du temps:', err);
+//       return res.status(500).send({ message: 'Erreur lors de l\'enregistrement du temps.' });
+//     }
+//     res.send({ message: 'Temps enregistré avec succès.' });
+//   });
+// });
 
-app.get('/api/dernier-temps', (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).send({ message: 'Veuillez vous connecter pour accéder à cette information.' });
-  }
+// app.get('/api/dernier-temps', (req, res) => {
+//   if (!req.session.userId) {
+//     return res.status(401).send({ message: 'Veuillez vous connecter pour accéder à cette information.' });
+//   }
 
-  const { niveauId } = req.query; // Récupère l'ID du niveau depuis les paramètres de requête
+//   const { niveauId } = req.query; // Récupère l'ID du niveau depuis les paramètres de requête
 
-  const query = `
-    SELECT MeilleurTemps, TempsTotal FROM Score
-    WHERE PlayerID = ? AND NiveauID = ?
-    ORDER BY ScoreID DESC
-    LIMIT 1;
-  `;
+//   const query = `
+//     SELECT MeilleurTemps, TempsTotal FROM Score
+//     WHERE PlayerID = ? AND NiveauID = ?
+//     ORDER BY ScoreID DESC
+//     LIMIT 1;
+//   `;
 
-  globalConnection.query(query, [req.session.userId, niveauId], (err, results) => {
-    if (err) {
-      console.error('Erreur lors de la récupération du dernier temps:', err);
-      return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
-    }
-    if (results.length > 0) {
-      // Assure que les clés MeilleurTemps et TempsTotal sont présentes même si elles sont NULL
-      const dernierTemps = {
-        MeilleurTemps: results[0].MeilleurTemps != null ? results[0].MeilleurTemps : null,
-        TempsTotal: results[0].TempsTotal != null ? results[0].TempsTotal : null,
-      };
-      res.json(dernierTemps); // Renvoie le dernier temps enregistré
-    } else {
-      res.status(404).send({ message: 'Aucun temps trouvé pour ce niveau.' });
-    }
-  });
-});
+//   globalConnection.query(query, [req.session.userId, niveauId], (err, results) => {
+//     if (err) {
+//       console.error('Erreur lors de la récupération du dernier temps:', err);
+//       return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
+//     }
+//     if (results.length > 0) {
+//       // Assure que les clés MeilleurTemps et TempsTotal sont présentes même si elles sont NULL
+//       const dernierTemps = {
+//         MeilleurTemps: results[0].MeilleurTemps != null ? results[0].MeilleurTemps : null,
+//         TempsTotal: results[0].TempsTotal != null ? results[0].TempsTotal : null,
+//       };
+//       res.json(dernierTemps); // Renvoie le dernier temps enregistré
+//     } else {
+//       res.status(404).send({ message: 'Aucun temps trouvé pour ce niveau.' });
+//     }
+//   });
+// });
 
-app.get('/api/temps-total', (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).send({ message: 'Veuillez vous connecter pour accéder à cette information.' });
-  }
+// app.get('/api/temps-total', (req, res) => {
+//   if (!req.session.userId) {
+//     return res.status(401).send({ message: 'Veuillez vous connecter pour accéder à cette information.' });
+//   }
 
-  const query = `
-    SELECT SUM(TempsTotal) AS TempsTotalGlobal FROM Score
-    WHERE PlayerID = ?;
-  `;
+//   const query = `
+//     SELECT SUM(TempsTotal) AS TempsTotalGlobal FROM Score
+//     WHERE PlayerID = ?;
+//   `;
 
-  globalConnection.query(query, [req.session.userId], (err, results) => {
-    if (err) {
-      console.error('Erreur lors de la récupération du temps total:', err);
-      return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
-    }
-    if (results.length > 0) {
-      res.json({ TempsTotalGlobal: results[0].TempsTotalGlobal || 0 });
-    } else {
-      res.status(404).send({ message: 'Aucun temps trouvé.' });
-    }
-  });
-});
+//   globalConnection.query(query, [req.session.userId], (err, results) => {
+//     if (err) {
+//       console.error('Erreur lors de la récupération du temps total:', err);
+//       return res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
+//     }
+//     if (results.length > 0) {
+//       res.json({ TempsTotalGlobal: results[0].TempsTotalGlobal || 0 });
+//     } else {
+//       res.status(404).send({ message: 'Aucun temps trouvé.' });
+//     }
+//   });
+// });
 
-app.get('/api/niveaux-debloques', (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).send('Utilisateur non connecté');
-  }
+// app.get('/api/niveaux-debloques', (req, res) => {
+//   if (!req.session.userId) {
+//     return res.status(401).send('Utilisateur non connecté');
+//   }
 
-  const query = `
-  SELECT n.NiveauID, n.Nom,
-        CASE 
-            WHEN n.DebloqueApresNiveauID IS NULL THEN TRUE
-            WHEN n.DebloqueApresNiveauID IN (
-                SELECT NiveauID FROM Score WHERE PlayerID = ? AND MeilleurTemps < 99999999.99
-            ) THEN TRUE
-            ELSE FALSE
-        END as Debloque
-  FROM Niveau n
-  ORDER BY n.NiveauID ASC;
-  `;
-  globalConnection.query(query, [req.session.userId], (err, results) => {
-    if (err) {
-      console.error('Erreur lors de la récupération des niveaux débloqués:', err);
-      return res.status(500).send('Erreur serveur');
-    }
-    res.json(results);
-  });
-});
+//   const query = `
+//   SELECT n.NiveauID, n.Nom,
+//         CASE 
+//             WHEN n.DebloqueApresNiveauID IS NULL THEN TRUE
+//             WHEN n.DebloqueApresNiveauID IN (
+//                 SELECT NiveauID FROM Score WHERE PlayerID = ? AND MeilleurTemps < 99999999.99
+//             ) THEN TRUE
+//             ELSE FALSE
+//         END as Debloque
+//   FROM Niveau n
+//   ORDER BY n.NiveauID ASC;
+//   `;
+//   globalConnection.query(query, [req.session.userId], (err, results) => {
+//     if (err) {
+//       console.error('Erreur lors de la récupération des niveaux débloqués:', err);
+//       return res.status(500).send('Erreur serveur');
+//     }
+//     res.json(results);
+//   });
+// });
 
 
 
