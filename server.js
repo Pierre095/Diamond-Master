@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurations
 const dbOptions = {
     host: "srv2027.hstgr.io",
-    user: "u365483190_pierre", // celui de la nouvelle DB
+    user: "u365483190_bouffies", // celui de la nouvelle DB
     password: "Su:6ikh:V!",
     database: "u365483190_diamond_master",
     port: 3306
