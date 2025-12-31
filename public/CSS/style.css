@@ -429,12 +429,6 @@ canvas {
     cursor: not-allowed;
 }
 
-/* .niveau_block:hover {
-    opacity: 0.5;
-    pointer-events: none; /* Empêche les clics */
-    cursor: not-allowed;
-} */
-
 .titre {
     display: flex;
     justify-content: space-around;

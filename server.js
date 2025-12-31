@@ -11,10 +11,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Configurations
 const dbOptions = {
-  host: 'mysql-bouffies.alwaysdata.net',
-  user: 'bouffies',
-  password: 'Handball*95640', // Remplacez par votre mot de passe réel
-  database: 'bouffies_diamond_master'
+    host: "srv2027.hstgr.io",
+    user: "u365483190_pierre", // celui de la nouvelle DB
+    password: "Su:6ikh:V!",
+    database: "u365483190_diamond_master",
+    port: 3306
 };
 
 // Session store setup
